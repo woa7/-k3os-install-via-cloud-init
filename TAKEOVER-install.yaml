@@ -57,5 +57,6 @@ iso_url=https://github.com/rancher/k3os/releases/download/${K3OS_VERSION}/k3os-$
 #rm -fr /tmp/install.sh || true
 wget -O- "https://raw.githubusercontent.com/rancher/k3os/master/install.sh" > /tmp/install.sh
 ###cd /tmp/ && wget $iso_url
-bash -x /tmp/install.sh --takeover --poweroff --debug --tty ttyS0 --config /tmp/config.yaml --no-format $(findmnt / -o SOURCE -n) $iso_url
+bash -x /tmp/install.sh --takeover --poweroff --debug --tty ttyS0 --config /tmp/config.yaml --no-format $(findmnt / -o SOURCE -n) $iso_url \
+ && set -x; sudo systemd-run --on-active=3 --timer-property=AccuracySec=100ms sudo systemctl reboot --force --force; sync; echo Rebooting
 
