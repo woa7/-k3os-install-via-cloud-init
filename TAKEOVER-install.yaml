@@ -2,9 +2,6 @@
 echo "Hello World.  The time is now $(date -R)!" | tee /root/output.txt
 
 # see https://cloudinit.readthedocs.io/en/latest/topics/format.html?highlight=user-data%20scripts#user-data-script
-
-# include with
-# #include https://raw.githubusercontent.com/woa7/k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
 #rm -fr /tmp/config.yaml || true
 wget -O- "https://raw.githubusercontent.com/woa7/k3os-install-via-cloud-init/master/config.yaml" > /tmp/config.yaml
 
@@ -67,3 +64,5 @@ export K3OS_INSTALL_POWER_OFF=false
 sh -x /tmp/install.sh --takeover --debug --tty ttyS0 --config /tmp/config.yaml --no-format "$(findmnt / -o SOURCE -n)" "$iso_url" \
  && set -x; sudo systemd-run --on-active=3 --timer-property=AccuracySec=100ms sudo systemctl reboot --force --force; sync; echo Rebooting
 
+# include with
+# #include https://raw.githubusercontent.com/woa7/k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
