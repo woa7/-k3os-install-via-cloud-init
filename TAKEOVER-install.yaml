@@ -5,7 +5,8 @@ echo "Hello World.  The time is now $(date -R)!" | tee /root/output.txt
 
 # include with
 # #include https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
-wget https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/config.yaml -o /tmp/config.yaml
+rm -fr /tmp/config.yaml || true
+wget "https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/config.yaml" -o /tmp/config.yaml
 
 
 set -e
@@ -26,7 +27,7 @@ then
 	if command_exists jq; then
 		K3OS_VERSION=$(curl -sL api.github.com/repos/rancher/k3os/releases/latest | jq .tag_name -r )
 	else
-		K3OS_VERSION=$(cd /tmp/ && wget api.github.com/repos/rancher/k3os/releases/latest -o latest && grep .tag_name latest | cut -d":" -f2 | cut -d"\"" -f2 )
+		K3OS_VERSION=$(cd /tmp/ && wget -O- "api.github.com/repos/rancher/k3os/releases/latest" | grep .tag_name | cut -d":" -f2 | cut -d"\"" -f2 )
 	# https://github.com/docker/compose/releases/latest/download/run.sh
 	fi
 fi
@@ -53,6 +54,7 @@ fi
 # https://github.com/docker/compose/releases/latest/download/run.sh
 iso_url=https://github.com/rancher/k3os/releases/download/${K3OS_VERSION}/k3os-${ARCH}.iso
 #iso_url="https://github.com/rancher/k3os/releases/download/$k3os_version/k3os-amd64.iso",
+rm -fr /tmp/install.sh || true
 wget https://raw.githubusercontent.com/rancher/k3os/master/install.sh -o /tmp/install.sh
 ###cd /tmp/ && wget $iso_url
 bash -x /tmp/install.sh --takeover --poweroff --debug --tty ttyS0 --config /tmp/config.yaml --no-format $(findmnt / -o SOURCE -n) \"{{user `iso_url`}}\""
