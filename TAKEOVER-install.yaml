@@ -1,10 +1,19 @@
-#!script
+#!/bin/sh
+echo "Hello World.  The time is now $(date -R)!" | tee /root/output.txt
+
+# see https://cloudinit.readthedocs.io/en/latest/topics/format.html?highlight=user-data%20scripts#user-data-script
+
+# include with
+# #include https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
+
 
 set -e
 
 # form https://github.com/rancher/k3os/blob/master/overlay/share/rancher/k3os/scripts/k3os-upgrade-rootfs
 PROC=$(uname -m)
 
+#        "sudo apt-get update -y",
+#        "sudo apt-get install -y dosfstools parted jq",
 # Take a parameter of the version number (i.e. v0.4.0) if it is given, otherwise use latest
 if [ -z $K3OS_VERSION ]
 then
@@ -28,30 +37,30 @@ fi
 #curl -fsSL "https://github.com/rancher/k3os/releases/download/${K3OS_VERSION}/k3os-rootfs-${ARCH}.tar.gz" | tar xz --strip-components=3
 #sync
 
-
 #export k3os_version="v0.11.0"
 iso_url=https://github.com/rancher/k3os/releases/download/${K3OS_VERSION}/k3os-${ARCH}.iso
 #iso_url="https://github.com/rancher/k3os/releases/download/$k3os_version/k3os-amd64.iso",
 wget https://raw.githubusercontent.com/rancher/k3os/master/install.sh -o /tmp/install.sh
+###cd /tmp/ && wget $iso_url
 bash -x /tmp/install.sh --takeover --poweroff --debug --tty ttyS0 --config /tmp/config.yaml --no-format $(findmnt / -o SOURCE -n) \"{{user `iso_url`}}\""
 #https://raw.githubusercontent.com/rancher/k3os/master/install.sh
 #./install.sh --takeover --debug --tty ttyS0 --config /tmp/config.yaml --no-format /dev/vda1 https://github.com/rancher/k3os/releases/download/v0.10.0/k3os.iso
 
-        "sudo apt-get update -y",
-        "sudo apt-get install -y dosfstools parted",
-        "sudo bash -x /tmp/install.sh --takeover --poweroff --debug --tty ttyS0 --config /tmp/config.yaml --no-format $(findmnt / -o SOURCE -n) \"{{user `iso_url`}}\""
-      ],
-      "type": "shell"
-    },
-    {
-      "inline": [
-        "set -x; sudo systemd-run --on-active=3 --timer-property=AccuracySec=100ms sudo systemctl reboot --force --force; sync; echo Rebooting"
-      ],
-      "pause_after": "3m",
-      "type": "shell"
-    }
-  ],
-  "variables": {
-    "iso_url": "https://github.com/rancher/k3os/releases/download/v0.11.0/k3os-amd64.iso",
-    "k3os_version": "v0.11.0",
-}
+#        "sudo apt-get update -y",
+#        "sudo apt-get install -y dosfstools parted",
+#        "sudo bash -x /tmp/install.sh --takeover --poweroff --debug --tty ttyS0 --config /tmp/config.yaml --no-format $(findmnt / -o SOURCE -n) \"{{user `iso_url`}}\""
+#      ],
+#      "type": "shell"
+#    },
+#    {
+#      "inline": [
+#        "set -x; sudo systemd-run --on-active=3 --timer-property=AccuracySec=100ms sudo systemctl reboot --force --force; sync; echo Rebooting"
+#      ],
+#      "pause_after": "3m",
+#      "type": "shell"
+#    }
+#  ],
+#  "variables": {
+#    "iso_url": "https://github.com/rancher/k3os/releases/download/v0.11.0/k3os-amd64.iso",
+#    "k3os_version": "v0.11.0",
+#}
