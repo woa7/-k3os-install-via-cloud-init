@@ -10,6 +10,11 @@ wget https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/
 
 set -e
 
+command_exists() {
+        command -v "$@" > /dev/null 2>&1
+}
+
+
 # form https://github.com/rancher/k3os/blob/master/overlay/share/rancher/k3os/scripts/k3os-upgrade-rootfs
 PROC=$(uname -m)
 
@@ -18,11 +23,10 @@ PROC=$(uname -m)
 # Take a parameter of the version number (i.e. v0.4.0) if it is given, otherwise use latest
 if [ -z $K3OS_VERSION ]
 then
-	if [ command -v jq ]
-	then
-	K3OS_VERSION=$(curl -sL api.github.com/repos/rancher/k3os/releases/latest | jq .tag_name -r )
+	if command_exists jq; then
+		K3OS_VERSION=$(curl -sL api.github.com/repos/rancher/k3os/releases/latest | jq .tag_name -r )
 	else
-	K3OS_VERSION=$(cd /tmp/ && wget api.github.com/repos/rancher/k3os/releases/latest -o latest && grep .tag_name latest | cut -d":" -f2 | cut -d"\"" -f2 )
+		K3OS_VERSION=$(cd /tmp/ && wget api.github.com/repos/rancher/k3os/releases/latest -o latest && grep .tag_name latest | cut -d":" -f2 | cut -d"\"" -f2 )
 	# https://github.com/docker/compose/releases/latest/download/run.sh
 	fi
 fi
