@@ -5,6 +5,7 @@ echo "Hello World.  The time is now $(date -R)!" | tee /root/output.txt
 
 # include with
 # #include https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
+wget https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/config.yaml -o /tmp/config.yaml
 
 
 set -e
