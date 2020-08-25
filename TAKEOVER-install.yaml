@@ -4,9 +4,9 @@ echo "Hello World.  The time is now $(date -R)!" | tee /root/output.txt
 # see https://cloudinit.readthedocs.io/en/latest/topics/format.html?highlight=user-data%20scripts#user-data-script
 
 # include with
-# #include https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
+# #include https://raw.githubusercontent.com/woa7/k3os-install-via-cloud-init/master/TAKEOVER-install.yaml
 #rm -fr /tmp/config.yaml || true
-wget -O- "https://raw.githubusercontent.com/woa7/-k3os-install-via-cloud-init/master/config.yaml" > /tmp/config.yaml
+wget -O- "https://raw.githubusercontent.com/woa7/k3os-install-via-cloud-init/master/config.yaml" > /tmp/config.yaml
 
 
 set -e
